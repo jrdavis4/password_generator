@@ -1,12 +1,10 @@
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
-// var allowedChars = "0123456789abcdefghijklmnopqrstuvwxyz !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~";
-// allowedChars = allowedChars.split("");
+var upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+var lowerCase = "abcdefghijklmnopqrstuvwxyz";
+var numbers = "0123456789";
+var special = " !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
-var lowerCase = "abcdefghijklmnopqrstuvwxyz".split("");
-var upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-var numbers = "0123456789".split("");
-var special = " !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~".split("");
 
 // Write password to the #password input
 function writePassword() {
@@ -16,6 +14,24 @@ function writePassword() {
   passwordText.value = password;
 
 }
+
+
+function generatePassword(){
+
+  var password = {
+    pwLength: 0,
+    upper: "n",
+    lower: "n",
+    numbers: "n",
+    special: "n",
+  }
+
+  password = askPasswordCriteria(password);
+
+  return passwordCreator(password);
+
+}
+
 
 function askPasswordCriteria(password){
 
@@ -33,8 +49,9 @@ function askPasswordCriteria(password){
     }
   }
 
-  var isValid = false;
-  while (isValid === false){
+
+  var terminate = false;
+  while (terminate === false){
 
     //UPPER CASE
     do{
@@ -66,7 +83,7 @@ function askPasswordCriteria(password){
 
     //CHECK IF AT LEAST ONE TYPE SELECTED
     if(password.upper === "y" || password.lower === "y" || password.numbers === "y" || password.special === "y"){
-      isValid = true;
+      terminate = true;
     } else {
       alert("You must use at least one character type!");
     }
@@ -76,21 +93,40 @@ function askPasswordCriteria(password){
 
 }
 
-function generatePassword(){
 
-  var password = {
-    pwLength: 0,
-    upper: "n",
-    lower: "n",
-    numbers: "n",
-    special: "n",
-  }
+function passwordCreator(password){
 
-  password = askPasswordCriteria(password);
-
+  var options = "";
+  var finalPassword = "";
 
   
+  //COMBINE PASSWORD OPTIONS INTO ONE STRING
+  if(password.upper === "y"){
+    options = options + upperCase;
+  }
+  if(password.lower === "y"){
+    options = options + lowerCase;
+  }
+  if(password.numbers === "y"){
+    options = options + numbers;
+  }
+  if(password.special === "y"){
+    options = options + special;
+  }
+
+  //SPLIT TO ARRAY
+  options = options.split("");
+
+
+  //LOOP TO BUILD FINAL PASSWORD
+  for(var i = 0; i < password.pwLength; i++){
+    finalPassword = finalPassword + options[Math.floor(Math.random() * options.length)]
+  }
+
+  return finalPassword;
+
 }
+
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
