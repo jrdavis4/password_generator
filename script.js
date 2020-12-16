@@ -1,7 +1,12 @@
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
-var allowedChars = "0123456789abcdefghijklmnopqrstuvwxyz !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~";
-allowedChars = allowedChars.split("");
+// var allowedChars = "0123456789abcdefghijklmnopqrstuvwxyz !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~";
+// allowedChars = allowedChars.split("");
+
+var lowerCase = "abcdefghijklmnopqrstuvwxyz".split("");
+var upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+var numbers = "0123456789".split("");
+var special = " !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~".split("");
 
 // Write password to the #password input
 function writePassword() {
@@ -12,119 +17,79 @@ function writePassword() {
 
 }
 
-function generatePassword(){
-  var password = {
-    pwLength: 0,
-    upper: false,
-    lower: false,
-    numbers: false,
-    special: false,
-  }
+function askPasswordCriteria(password){
 
-  password.pwLength = getLength();
+  //ASK PASSWORD LENGTH
+  while(!(password.pwLength >= 8 && password.pwLength <= 128)){
 
-  var terminate = false;
-  while(terminate === false){
-    password.upper = getUpper();
-    password.lower = getLower();
-    password.numbers = getNumbers();
-    password.special = getSpecial();
+    password.pwLength = prompt("Enter desired password length (8-128 charactes");
 
-    if(password.upper || password.lower || password.numbers || password.special){
-      terminate = true;
-    } else {
-      alert("You must use at least one character type! Try again...");
-    }
-  }
-
-}
-
-function getLength(){
-  var length = 0;
-
-  while(!(length >= 8 && length <= 128)){
-
-    length = prompt("Enter desired password length (8-128 charactes");
-
-    if (isNaN(length)){
+    if (isNaN(password.pwLength)){
       alert("You must enter a number only!");
-    } else if (length > 128) {
+    } else if (password.pwLength > 128) {
       alert("Password must be no longer than 128 characters");
-    } else if (length < 8){
+    } else if (password.pwLength < 8){
       alert("Password must be at least 8 characters long!");
     }
   }
 
-  return length;
-}
+  var isValid = false;
+  while (isValid === false){
 
-function getUpper(){
-
-  var terminate = false;
-  while(terminate === false){
-    var upper = prompt("Do you want to include upper case? [y or n]");
-    terminate = isValid(upper);
-  }
-
-  if (upper === "y"){
-    return true;
-  } else {
-    return false;
-  }
- 
-}
-
-function getLower(){
-
-  var terminate = false;
-  while(terminate === false){
-    var lower = prompt("Do you want to include lower case? [y or n]");
-    terminate = isValid(lower);
-  }
-
-  if (lower === "y"){
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function getNumbers(){
+    //UPPER CASE
+    do{
+      password.upper = prompt("Do you want to include upper case? [y or n]").toLowerCase();
+    }
+    while(!(password.upper === "y" || password.upper === "n"));
   
-  var terminate = false;
-  while(terminate === false){
-    var number = prompt("Do you want to include numbers? [y or n]");
-    terminate = isValid(number);
+
+    //LOWER CASE
+    do{
+      password.lower = prompt("Do you want to include lower case? [y or n]").toLowerCase();
+    }
+    while(!(password.lower === "y" || password.lower === "n"));
+
+
+    //NUMBERS
+    do{
+      password.numbers = prompt("Do you want to include numbers? [y or n]").toLowerCase();
+    }
+    while(!(password.numbers === "y" || password.numbers === "n"));
+
+
+    //SPECIAL CHARACTERS
+    do{
+      password.special = prompt("Do you want to include special characters? [y or n]").toLowerCase();
+    }
+    while(!(password.special === "y" || password.special === "n"));
+    
+
+    //CHECK IF AT LEAST ONE TYPE SELECTED
+    if(password.upper === "y" || password.lower === "y" || password.numbers === "y" || password.special === "y"){
+      isValid = true;
+    } else {
+      alert("You must use at least one character type!");
+    }
   }
 
-  if (number === "y"){
-    return true;
-  } else {
-    return false;
-  }
+  return password;
+
 }
 
-function getSpecial(){
+function generatePassword(){
+
+  var password = {
+    pwLength: 0,
+    upper: "n",
+    lower: "n",
+    numbers: "n",
+    special: "n",
+  }
+
+  password = askPasswordCriteria(password);
+
+
   
-  var terminate = false;
-  while(terminate === false){
-    var special = prompt("Do you want to include special characters? [y or n]");
-    terminate = isValid(special);
-  }
-
-  if (special === "y"){
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function isValid(x){
-  if (x.toLowerCase() === "y" || x.toLowerCase() === "n"){
-    return true;
-  } else {
-    return false;
-  }
 }
 
 // Add event listener to generate button
